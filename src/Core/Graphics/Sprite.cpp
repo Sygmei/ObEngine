@@ -470,9 +470,7 @@ namespace obe::Graphics
         const Color& color = m_sprite.getColor();
         if (color != Color::White)
         {
-            result.emplace("color",
-                vili::object { { "r", color.r }, { "g", color.g }, { "b", color.b },
-                    { "a", color.a } });
+            result.emplace("color", color.dump());
         }
         return result;
     }
@@ -549,33 +547,8 @@ namespace obe::Graphics
 
         if (data.contains("color"))
         {
-            Color spriteColor = Color::White;
-            vili::node& color = data.at("color");
-            if (color.is<vili::object>() && color.contains("r"))
-            {
-                const double r = color.at("r").as<vili::number>();
-                const double g = color.at("g").as<vili::number>();
-                const double b = color.at("b").as<vili::number>();
-                const double a
-                    = color.contains("a") ? color.at("a").as<vili::number>() : 255.f;
-                spriteColor.fromRgb(r, g, b, a);
-            }
-            else if (color.is<vili::object>() && color.contains("H"))
-            {
-                const int H = color.at("H").as<vili::integer>();
-                const double S = color.at("S").as<vili::number>();
-                const double V = color.at("V").as<vili::number>();
-                spriteColor.fromHsv(H, S, V);
-            }
-            else if (color.is<vili::string>())
-            {
-                spriteColor.fromString(color);
-            }
-            else
-            {
-                throw Exceptions::InvalidSpriteColorType(
-                    vili::to_string(color.type()), color.dump(), EXC_INFO);
-            }
+            Color spriteColor;
+            spriteColor.load(data.at("color"));
             this->setColor(spriteColor);
         }
 

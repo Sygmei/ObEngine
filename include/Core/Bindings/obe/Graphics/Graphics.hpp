@@ -16,6 +16,8 @@ namespace obe::Graphics::Bindings
     void LoadClassSpriteHandlePoint(sol::state_view state);
     void LoadClassText(sol::state_view state);
     void LoadClassTexture(sol::state_view state);
+    void LoadClassHsv(sol::state_view state);
+    void LoadEnumColorType(sol::state_view state);
     void LoadEnumSpriteHandlePointType(sol::state_view state);
     void LoadFunctionInitPositionTransformer(sol::state_view state);
     void LoadFunctionMakeNullTexture(sol::state_view state);

@@ -229,6 +229,8 @@ namespace obe::Bindings
         obe::Graphics::Bindings::LoadClassSpriteHandlePoint(state);
         obe::Graphics::Bindings::LoadClassText(state);
         obe::Graphics::Bindings::LoadClassTexture(state);
+        obe::Graphics::Bindings::LoadClassHsv(state);
+        obe::Graphics::Bindings::LoadEnumColorType(state);
         obe::Graphics::Bindings::LoadEnumSpriteHandlePointType(state);
         obe::Graphics::Bindings::LoadFunctionInitPositionTransformer(state);
         obe::Graphics::Bindings::LoadFunctionMakeNullTexture(state);

@@ -3,16 +3,32 @@
 #include <string>
 
 #include <SFML/Graphics/Color.hpp>
+#include <Types/Serializable.hpp>
 
 namespace obe::Graphics
 {
+    struct Hsv
+    {
+        int H;
+        double S, V;
+    };
+
+    enum class ColorType
+    {
+        Rgba,
+        Hsv,
+        Hex,
+        ColorName
+    };
+
     /**
      * \brief A class to handle colors
      * \bind{Color}
      */
-    class Color
+    class Color : public Types::Serializable
     {
     public:
+
         double r = 0;
         double g = 0;
         double b = 0;
@@ -23,6 +39,10 @@ namespace obe::Graphics
         explicit Color(const std::string& nameOrHex);
         Color(const Color& color);
         Color(const sf::Color& color);
+
+        vili::node dump(ColorType type);
+        vili::node dump() const override;
+        void load(vili::node& data) override;
 
         void fromString(std::string string);
         bool fromName(std::string name, bool strict = true);
@@ -191,6 +211,15 @@ namespace obe::Graphics
         static Color WhiteSmoke;
         static Color Yellow;
         static Color YellowGreen;
+
+    private:
+        Hsv toHsv() const;
+        std::string toNamed() const;
+        std::string toHex() const;
+        std::string toString() const;
+
+        ColorType type;
+
     };
 
     std::ostream& operator<<(std::ostream& os, const Color& color);

@@ -261,6 +261,73 @@ namespace obe::Graphics
         this->a = color.a;
     }
 
+    vili::node Color::dump(ColorType type)
+    {
+        this->type = type;
+        return dump();
+    }
+
+    vili::node Color::dump() const
+    {
+        vili::node result;
+        if (type == ColorType::Hex)
+        {
+            result = toHex();
+        }
+        else if (type == ColorType::Hsv)
+        {
+            Hsv value = toHsv();
+            result = vili::object {
+                { "H", value.H },
+                { "S", value.S },
+                { "V", value.V },
+            };
+        }
+        else if (type == ColorType::ColorName)
+        {
+            result = toString();
+        }
+        else
+        {
+            result = vili::object {
+                { "r", r },
+                { "g", g },
+                { "b", b },
+                { "a", a },
+            };
+        }
+        return result;
+    }
+
+    void Color::load(vili::node& data)
+    {
+        if (data.is<vili::object>() && data.contains("r"))
+        {
+            const double r = data.at("r").as<vili::number>();
+            const double g = data.at("g").as<vili::number>();
+            const double b = data.at("b").as<vili::number>();
+            const double a = data.contains("a") ? data.at("a").as<vili::number>() : 255.f;
+            this->fromRgb(r, g, b, a);
+        }
+        else if (data.is<vili::object>() && data.contains("H"))
+        {
+            const int H = data.at("H").as<vili::integer>();
+            const double S = data.at("S").as<vili::number>();
+            const double V = data.at("V").as<vili::number>();
+            this->fromHsv(H, S, V);
+        }
+        else if (data.is<vili::string>())
+        {
+            this->fromString(data);
+        }
+        else
+        {
+            throw Exceptions::InvalidSpriteColorType(
+                vili::to_string(data.type()), data.dump(), EXC_INFO);
+        }
+    }
+
+
     void Color::fromString(std::string string)
     {
         if (!this->fromName(string, false))
@@ -278,6 +345,7 @@ namespace obe::Graphics
             this->g = color->second.g;
             this->b = color->second.b;
             this->a = color->second.a;
+            this->type = ColorType::ColorName;
             return true;
         }
         if (!strict)
@@ -295,6 +363,7 @@ namespace obe::Graphics
         this->g = g;
         this->b = b;
         this->a = a;
+        this->type = ColorType::Rgba;
     }
 
     void Color::fromHsv(const int H, const double S, const double V)
@@ -350,6 +419,7 @@ namespace obe::Graphics
         this->r = (Rs + m) * 255;
         this->g = (Gs + m) * 255;
         this->b = (Bs + m) * 255;
+        this->type = ColorType::Hsv;
     }
 
     uint32_t Color::toInteger() const
@@ -399,6 +469,91 @@ namespace obe::Graphics
         this->r = rgb[0];
         this->g = rgb[1];
         this->b = rgb[2];
+        this->type = ColorType::Hex;
+    }
+
+    Hsv Color::toHsv() const
+    {
+        double min, max, delta, Rs, Gs, Bs;
+        Hsv res;
+
+        Rs = r / 255;
+        Gs = g / 255;
+        Bs = b / 255;
+
+        min = Rs < Gs ? Rs : Gs;
+        min = min < Bs ? min : Bs;
+
+        max = Rs > Gs ? Rs : Gs;
+        max = max > Bs ? max : Bs;
+
+        res.V = max;
+        delta = max - min;
+        if (delta < 0.003)
+        {
+            res.S = 0;
+            res.H = 0;
+            return res;
+        }
+        if (max > 0.0)
+        {
+            res.S = (delta / max);
+        }
+        else
+        {
+            res.S = 0.0;
+            res.H = 0;
+            return res;
+        }
+        double Hs = 0;
+        if (Rs >= max)
+        {
+            Hs = (Gs - Bs) / delta;
+        }
+        else if (Gs >= max)
+        {
+            Hs = 2.0 + (Bs - Rs) / delta;
+        }
+        else
+        {
+            Hs = 4.0 + (Rs - Gs) / delta;
+        }
+
+        Hs *= 60.0;
+
+        if (Hs < 0.0)
+            Hs += 360.0;
+        res.H = int(Hs + 0.5);
+        return res;
+    }
+
+    std::string Color::toNamed() const
+    {
+        auto it = std::find_if(ColorNames.begin(), ColorNames.end(),
+            [this](const std::pair<std::string, Color>& color) { return color.second == *this;});
+        if (it != ColorNames.end())
+        {
+            return it->first;
+        }
+        return std::string();
+    }
+
+    std::string Color::toHex() const
+    {
+        std::stringstream ss;
+        ss << "#";
+        ss << std::hex << (int(r + 0.5) << 16 | int(g + 0.5) << 8 | int(b + 0.5));
+        return ss.str();
+    }
+
+    std::string Color::toString() const
+    {
+        std::string res;
+        res = toNamed();
+        if (res == "") {
+            res = toHex();
+        }
+        return res;
     }
 
     bool Color::operator==(const Color& color) const

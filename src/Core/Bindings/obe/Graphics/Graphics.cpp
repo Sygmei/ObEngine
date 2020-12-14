@@ -13,6 +13,15 @@
 
 namespace obe::Graphics::Bindings
 {
+    void LoadEnumColorType(sol::state_view state)
+    {
+        sol::table GraphicsNamespace = state["obe"]["Graphics"].get<sol::table>();
+        GraphicsNamespace.new_enum<obe::Graphics::ColorType>("ColorType",
+            { { "Rgba", obe::Graphics::ColorType::Rgba },
+                { "Hsv", obe::Graphics::ColorType::Hsv },
+                { "Hex", obe::Graphics::ColorType::Hex },
+                { "ColorName", obe::Graphics::ColorType::ColorName } });
+    }
     void LoadEnumSpriteHandlePointType(sol::state_view state)
     {
         sol::table GraphicsNamespace = state["obe"]["Graphics"].get<sol::table>();
@@ -32,7 +41,14 @@ namespace obe::Graphics::Bindings
                     obe::Graphics::Color(double, double, double, double),
                     obe::Graphics::Color(const std::string&),
                     obe::Graphics::Color(const obe::Graphics::Color&),
-                    obe::Graphics::Color(const sf::Color&)>());
+                    obe::Graphics::Color(const sf::Color&)>(),
+                sol::base_classes, sol::bases<obe::Types::Serializable>());
+        bindColor["dump"] = sol::overload(
+            static_cast<vili::node (obe::Graphics::Color::*)(obe::Graphics::ColorType)>(
+                &obe::Graphics::Color::dump),
+            static_cast<vili::node (obe::Graphics::Color::*)() const>(
+                &obe::Graphics::Color::dump));
+        bindColor["load"] = &obe::Graphics::Color::load;
         bindColor["fromString"] = &obe::Graphics::Color::fromString;
         bindColor["fromName"] = sol::overload(
             [](obe::Graphics::Color* self, std::string name) -> bool {
@@ -430,6 +446,16 @@ namespace obe::Graphics::Bindings
             static_cast<obe::Graphics::Texture& (
                 obe::Graphics::Texture::*)(std::shared_ptr<sf::Texture>)>(
                 &obe::Graphics::Texture::operator=));
+    }
+    void LoadClassHsv(sol::state_view state)
+    {
+        sol::table GraphicsNamespace = state["obe"]["Graphics"].get<sol::table>();
+        sol::usertype<obe::Graphics::Hsv> bindHsv
+            = GraphicsNamespace.new_usertype<obe::Graphics::Hsv>(
+                "Hsv", sol::call_constructor, sol::default_constructor);
+        bindHsv["H"] = &obe::Graphics::Hsv::H;
+        bindHsv["S"] = &obe::Graphics::Hsv::S;
+        bindHsv["V"] = &obe::Graphics::Hsv::V;
     }
     void LoadFunctionInitPositionTransformer(sol::state_view state)
     {
