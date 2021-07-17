@@ -7,14 +7,14 @@ strategy:
   matrix:
     linux-16.04:
       imageName: 'ubuntu-16.04'
-    linux-18.04:
-      imageName: 'ubuntu-18.04'
-    linux-latest:
-      imageName: 'ubuntu-latest'
-    mac:
-      imageName: 'macos-10.15'
-    windows:
-      imageName: 'windows-2019'
+    # linux-18.04:
+    #   imageName: 'ubuntu-18.04'
+    # linux-latest:
+    #   imageName: 'ubuntu-latest'
+    # mac:
+    #   imageName: 'macos-10.15'
+    # windows:
+    #   imageName: 'windows-2019'
 
 variables:
   MSVC_DEFAULT_OPTIONS: ON
@@ -32,7 +32,6 @@ steps:
     DestinationFolder: '$(System.DefaultWorkingDirectory)'
     requireAuthentication: false
   displayName: "[Windows] Download SFML file"
-
 - task: ExtractFiles@1
   condition: eq( variables['Agent.OS'], 'Windows_NT' )
   inputs:
@@ -102,7 +101,18 @@ steps:
   displayName: "cmake build"
 - script: |
     cd $(System.DefaultWorkingDirectory)/build
-    ./tests/ObEngineTests
+    ./tests/ObEngineTests -r junit
+- task: PublishTestResults@2
+  inputs:
+    testResultsFormat: 'JUnit' # Options: JUnit, NUnit, VSTest, xUnit, cTest
+    testResultsFiles: '**/TEST-*.xml' 
+    #searchFolder: '$(System.DefaultWorkingDirectory)' # Optional
+    #mergeTestResults: false # Optional
+    #failTaskOnFailedTests: false # Optional
+    #testRunTitle: # Optional
+    #buildPlatform: # Optional
+    #buildConfiguration: # Optional
+    #publishRunAttachments: true # Optional
   condition: or(eq( variables['Agent.OS'], 'Linux' ), eq( variables['Agent.OS'], 'Darwin' ))
   displayName: "Run tests"
 
