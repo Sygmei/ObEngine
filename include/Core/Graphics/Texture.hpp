@@ -20,7 +20,6 @@ namespace obe::Graphics
         Texture(std::shared_ptr<sf::Texture> texture);
         Texture(const sf::Texture& texture);
         Texture(const Texture& copy);
-        ~Texture();
 
         bool create(unsigned int width, unsigned int height);
         bool loadFromFile(const std::string& filename);

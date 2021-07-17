@@ -117,7 +117,7 @@ namespace obe::Graphics::Canvas
     void Text::refresh()
     {
         shape.clear();
-        for (auto text : texts)
+        for (const auto& text : texts)
         {
             if (!text.string.empty())
             {

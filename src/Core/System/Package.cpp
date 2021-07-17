@@ -29,7 +29,7 @@ namespace obe::System::Package
     {
         vili::node packages = vili::parser::from_file("Package/Packages.vili"_fs);
         std::vector<std::string> packageNames;
-        for (auto [packageName, _] : packages.items())
+        for (const auto& [packageName, _] : packages.items())
         {
             packageNames.push_back(packageName);
         }

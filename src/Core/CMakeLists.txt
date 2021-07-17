@@ -36,6 +36,7 @@ target_link_libraries(ObEngineCore elzip)
 target_link_libraries(ObEngineCore sfe)
 target_link_libraries(ObEngineCore vili)
 target_link_libraries(ObEngineCore Soloud)
+target_link_libraries(ObEngineCore lunasvg)
 
 # Internal / External dependencies
 target_link_libraries(ObEngineCore fmt::fmt)

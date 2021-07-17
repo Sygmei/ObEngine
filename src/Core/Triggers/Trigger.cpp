@@ -157,7 +157,7 @@ namespace obe::Triggers
             sol::new_table());
         if (!m_envsToRemove.empty())
         {
-            for (sol::environment envToRemove : m_envsToRemove)
+            for (const sol::environment& envToRemove : m_envsToRemove)
             {
                 m_registeredEnvs.erase(
                     std::remove_if(m_registeredEnvs.begin(), m_registeredEnvs.end(),

@@ -11,6 +11,8 @@ namespace obe::Types
     {
     public:
         virtual ~Serializable() = default;
+        Serializable& operator=(Serializable&&) = delete; //no copy nor move
+
         /**
          * \brief Dumps the content of the Serializable object to a ComplexNode
          */

@@ -62,7 +62,9 @@ namespace obe::Graphics::Canvas
          * \param target Target where to render the result
          */
         virtual void draw(RenderTarget target) = 0;
+
         virtual ~CanvasElement() = default;
+        CanvasElement& operator=(CanvasElement&&) = delete; //no copy nor move
 
         /**
          * \brief Change layer or object and will ask the Canvas to reorder

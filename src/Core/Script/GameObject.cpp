@@ -199,7 +199,7 @@ namespace obe::Script
                 vili::node& sourceNode = obj.at("Script").at("sources");
                 if (sourceNode.is<vili::array>())
                 {
-                    for (auto source : sourceNode)
+                    for (const auto& source : sourceNode)
                     {
                         loadSource(source);
                     }
@@ -423,7 +423,7 @@ namespace obe::Script
                 m_environment["__TRIGGERS"][trigger->getTriggerLuaTableName()]
                     = sol::lua_nil;
             }
-            for (auto [k, _] : m_environment)
+            for (const auto& [k, _] : m_environment)
             {
                 m_environment[k] = sol::lua_nil;
             }

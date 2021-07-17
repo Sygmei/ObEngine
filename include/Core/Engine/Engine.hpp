@@ -65,6 +65,7 @@ namespace obe::Engine
     public:
         Engine();
         ~Engine();
+        Engine& operator=(Engine&&) = delete; //no copy nor move
 
         void init();
         void run();

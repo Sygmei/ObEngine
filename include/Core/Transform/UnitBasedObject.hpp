@@ -19,6 +19,8 @@ namespace obe::Transform
 
     public:
         virtual ~UnitBasedObject() = default;
+        UnitBasedObject& operator=(UnitBasedObject&&) = delete; //no copy nor move
+
         /**
          * \brief Set the unit the Object should work with
          * \param unit Unit you want the Object to work with

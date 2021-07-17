@@ -32,6 +32,11 @@ namespace obe::Triggers
             const std::string& triggerGroupNamespace,
             const std::string& triggerGroupName);
         ~TriggerGroup();
+        TriggerGroup(const TriggerGroup&) = default;
+        TriggerGroup& operator=(const TriggerGroup&) = default;
+        TriggerGroup(TriggerGroup&&) noexcept = default;
+        TriggerGroup& operator=(TriggerGroup&&) noexcept = default;
+
         /**
          * \brief Sets if the TriggerGroup is joinable or not
          * \param joinable true if the TriggerGroup should be joinable, false

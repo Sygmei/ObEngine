@@ -15,6 +15,8 @@ namespace obe::Types
 
     public:
         virtual ~Identifiable() = default;
+        Identifiable& operator=(Identifiable&&) = delete; //no copy nor move
+
         /**
          * \brief Creates a new Identifiable
          * \param id A std::string containing the id of the Identifiable

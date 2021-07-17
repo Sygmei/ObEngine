@@ -21,7 +21,6 @@ namespace obe::Component
          */
         static constexpr std::string_view ComponentType = "ComponentBase";
         ComponentBase(const std::string& id);
-        ~ComponentBase() override = default;
         virtual void inject(unsigned int envIndex) = 0;
         virtual void remove() = 0;
 

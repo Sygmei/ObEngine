@@ -36,6 +36,7 @@ add_subdirectory(extlibs/dynamicLinker)
 add_subdirectory(extlibs/fswrapper)
 add_subdirectory(extlibs/vili)
 add_subdirectory(extlibs/soloud)
+add_subdirectory(extlibs/lunasvg)
 
 if (APPLE OR USE_FILESYSTEM_FALLBACK)
     set(USE_FILESYSTEM_FALLBACK TRUE CACHE BOOL "Use filesystem fallback" FORCE)

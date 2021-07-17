@@ -20,7 +20,7 @@ namespace obe::Config
         std::reverse(mountPoints.begin(), mountPoints.end());
         const auto loadResult
             = System::Path(mountPoints).set("Data/config.cfg.vili").findAll();
-        for (const std::string path : loadResult)
+        for (const std::string& path : loadResult)
         {
             Debug::Log->info("Loading config file from {}", path);
             vili::node conf

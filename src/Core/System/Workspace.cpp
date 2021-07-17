@@ -41,7 +41,7 @@ namespace obe::System::Workspace
     {
         vili::node workspaces = vili::parser::from_file("Workspace/Workspaces.vili");
         std::vector<std::string> workspacesNames;
-        for (auto [workspaceName, _] : workspaces.items())
+        for (const auto& [workspaceName, _] : workspaces.items())
         {
             workspacesNames.push_back(workspaceName);
         }
